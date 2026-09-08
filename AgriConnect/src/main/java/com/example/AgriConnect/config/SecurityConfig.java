@@ -52,6 +52,7 @@ public class SecurityConfig {
                         // resend-verification would be reachable with no
                         // Authentication at all, and Authentication.getName()
                         // in the controller would NPE instead of 401ing.
+                        .requestMatchers(HttpMethod.OPTIONS, "/**").permitAll()
                         .requestMatchers("/api/auth/resend-verification").authenticated()
 
                         .requestMatchers("/api/auth/**").permitAll()
