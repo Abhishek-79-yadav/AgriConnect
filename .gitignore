@@ -1,24 +1,29 @@
-# Dependencies
-node_modules/
-
 # Build output
-dist/
-build/
-
-# Env files — real API URLs/keys must never be committed; see .env.example
-.env
-.env.local
-.env.*.local
+target/
+*.class
 
 # Logs
+logs/
 *.log
-npm-debug.log*
+
+# Local/IDE config that may carry real secrets or machine-specific paths
+application-local.properties
+application-*.properties
+!application.properties
+.env
+.env.*
 
 # IDE
 .idea/
-.vscode/
 *.iml
+.vscode/
+.settings/
+.classpath
+.project
 
 # OS
 .DS_Store
 Thumbs.db
+
+# Maven wrapper cache
+.mvn/wrapper/maven-wrapper.jar

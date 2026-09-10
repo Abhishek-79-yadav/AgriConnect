@@ -1,0 +1,2 @@
+ALTER TABLE order_item
+    ADD COLUMN payout_status VARCHAR(20) NOT NULL DEFAULT 'PENDING';
