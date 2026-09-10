@@ -1,4 +1,4 @@
-package com.example.AgriConnect;
+com.example.agriconnect.AgriConnectApplication
 
 import io.github.cdimascio.dotenv.Dotenv;
 import org.springframework.boot.SpringApplication;
