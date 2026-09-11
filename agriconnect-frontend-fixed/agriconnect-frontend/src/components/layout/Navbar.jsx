@@ -1,14 +1,13 @@
 import { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
-import { Menu, X, ShoppingCart, Heart, LogOut, LayoutDashboard, Search as SearchIcon, Sun, Moon } from "lucide-react";
+import { ShoppingCart, Heart, LogOut, LayoutDashboard, Search as SearchIcon, Sun, Moon } from "lucide-react";
 import toast from "react-hot-toast";
 
 import { logoutThunk } from "../../redux/thunks/authThunk";
 import ROLES from "../../constants/roles";
 import Logo from "../common/Logo";
 import NotificationBell from "./NotificationBell";
-import { MENUS } from "./Sidebar";
 import { useTheme } from "../../context/ThemeContext";
 
 const ROLE_BADGE = {
@@ -34,7 +33,6 @@ export default function Navbar() {
   const cartCount = useSelector((state) => state.cart.items?.length ?? 0);
   const { theme, toggleTheme } = useTheme();
 
-  const [mobileOpen, setMobileOpen] = useState(false);
   const [menuOpen, setMenuOpen] = useState(false);
   const [searchValue, setSearchValue] = useState("");
 
@@ -51,7 +49,6 @@ export default function Navbar() {
     e.preventDefault();
     const q = searchValue.trim();
     navigate(q ? `/search?q=${encodeURIComponent(q)}` : "/search");
-    setMobileOpen(false);
   };
 
   const navLinks = [
@@ -189,34 +186,30 @@ export default function Navbar() {
           )}
         </div>
 
-        {/* Mobile: cart stays one tap away, doesn't hide behind the hamburger */}
-        {isAuthenticated && user?.role === ROLES.BUYER && (
-          <Link to="/buyer/cart" aria-label="Cart" className="relative text-ink/70 md:hidden">
-            <ShoppingCart size={22} />
-            {cartCount > 0 && (
-              <span className="absolute -right-2 -top-2 flex h-4 w-4 items-center justify-center rounded-full bg-gold text-[10px] font-medium text-white">
-                {cartCount}
-              </span>
-            )}
-          </Link>
-        )}
+        {/* Mobile: cart + theme toggle, pinned to the far right corner.
+            Navigation itself lives in MobileBottomNav (Home/Shop/Login
+            plus a "More" sheet with Dashboard/Profile/Logout), so no
+            hamburger menu is needed here. */}
+        <div className="ml-auto flex items-center gap-3 md:hidden">
+          {isAuthenticated && user?.role === ROLES.BUYER && (
+            <Link to="/buyer/cart" aria-label="Cart" className="relative text-ink/70">
+              <ShoppingCart size={22} />
+              {cartCount > 0 && (
+                <span className="absolute -right-2 -top-2 flex h-4 w-4 items-center justify-center rounded-full bg-gold text-[10px] font-medium text-white">
+                  {cartCount}
+                </span>
+              )}
+            </Link>
+          )}
 
-        {/* Mobile toggle */}
-        <button
-          onClick={toggleTheme}
-          aria-label="Toggle dark mode"
-          className="text-ink/70 transition hover:text-ink md:hidden"
-        >
-          {theme === "dark" ? <Sun size={22} /> : <Moon size={22} />}
-        </button>
-
-        <button
-          className="md:hidden text-ink"
-          onClick={() => setMobileOpen((v) => !v)}
-          aria-label="Toggle menu"
-        >
-          {mobileOpen ? <X size={24} /> : <Menu size={24} />}
-        </button>
+          <button
+            onClick={toggleTheme}
+            aria-label="Toggle dark mode"
+            className="text-ink/70 transition hover:text-ink"
+          >
+            {theme === "dark" ? <Sun size={22} /> : <Moon size={22} />}
+          </button>
+        </div>
       </div>
 
       {/* Mobile search — always visible below the compact header, not hidden behind a toggle */}
@@ -230,108 +223,6 @@ export default function Navbar() {
           className="w-full rounded-full border border-line bg-card py-2 pl-9 pr-3 text-sm text-ink placeholder:text-ink/40 focus:border-gold focus:outline-none focus:ring-1 focus:ring-gold"
         />
       </form>
-
-      {/* Mobile menu */}
-      {mobileOpen && (
-        <div className="md:hidden border-t border-line bg-paper px-4 py-4 flex flex-col gap-1">
-          {navLinks.map((link) => (
-            <Link
-              key={link.to}
-              to={link.to}
-              onClick={() => setMobileOpen(false)}
-              className="rounded px-2 py-2.5 text-sm text-ink hover:bg-card"
-            >
-              {link.label}
-            </Link>
-          ))}
-
-          <div className="my-2 border-t border-line" />
-
-          <button
-            onClick={toggleTheme}
-            className="flex items-center gap-2 rounded px-2 py-2.5 text-left text-sm text-ink hover:bg-card"
-          >
-            {theme === "dark" ? <Sun size={17} /> : <Moon size={17} />}
-            {theme === "dark" ? "Light mode" : "Dark mode"}
-          </button>
-
-          <div className="my-2 border-t border-line" />
-
-          {!isAuthenticated ? (
-            <>
-              <Link
-                to="/login"
-                onClick={() => setMobileOpen(false)}
-                className="rounded px-2 py-2.5 text-sm text-ink hover:bg-card"
-              >
-                Log in
-              </Link>
-              <Link
-                to="/register"
-                onClick={() => setMobileOpen(false)}
-                className="mt-1 rounded bg-gold px-2 py-2.5 text-center text-sm font-medium text-white"
-              >
-                Register
-              </Link>
-            </>
-          ) : (
-            <>
-              {user?.role === ROLES.BUYER && (
-                <>
-                  <Link
-                    to="/buyer/cart"
-                    onClick={() => setMobileOpen(false)}
-                    className="rounded px-2 py-2.5 text-sm text-ink hover:bg-card"
-                  >
-                    Cart ({cartCount})
-                  </Link>
-                  <Link
-                    to="/buyer/wishlist"
-                    onClick={() => setMobileOpen(false)}
-                    className="rounded px-2 py-2.5 text-sm text-ink hover:bg-card"
-                  >
-                    Wishlist
-                  </Link>
-                </>
-              )}
-              {(MENUS[user?.role] || []).map(({ section, items }) => (
-                <div key={section} className="mt-1">
-                  <p className="px-2 pb-1 pt-2 text-[11px] font-semibold uppercase tracking-wider text-ink/40">
-                    {section}
-                  </p>
-                  {items.map(({ to, label, icon: Icon }) => (
-                    <Link
-                      key={to}
-                      to={to}
-                      onClick={() => setMobileOpen(false)}
-                      className="flex items-center gap-2.5 rounded px-2 py-2.5 text-sm text-ink hover:bg-card"
-                    >
-                      <Icon size={16} className="text-ink/50" />
-                      {label}
-                    </Link>
-                  ))}
-                </div>
-              ))}
-              <Link
-                to="/profile"
-                onClick={() => setMobileOpen(false)}
-                className="rounded px-2 py-2.5 text-sm text-ink hover:bg-card"
-              >
-                Profile
-              </Link>
-              <button
-                onClick={() => {
-                  setMobileOpen(false);
-                  handleLogout();
-                }}
-                className="mt-1 rounded px-2 py-2.5 text-left text-sm text-rust hover:bg-rust-light"
-              >
-                Log out
-              </button>
-            </>
-          )}
-        </div>
-      )}
     </header>
   );
 }
