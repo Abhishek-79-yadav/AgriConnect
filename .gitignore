@@ -1,23 +1,32 @@
-# Dependencies
+﻿# IntelliJ IDEA
+.idea/
+*.iml
+
+# VS Code
+.vscode/
+
+# Java / Maven
+target/
+**/target/
+
+# Node / React
 node_modules/
-
-# Build output
+**/node_modules/
 dist/
-build/
+**/dist/
 
-# Env files — real API URLs/keys must never be committed; see .env.example
+# Environment / secrets
 .env
-.env.local
-.env.*.local
+**/.env
+application-local.properties
+application-local.yml
 
 # Logs
+logs/
 *.log
-npm-debug.log*
 
-# IDE
-.idea/
-.vscode/
-*.iml
+# ZIP archives
+*.zip
 
 # OS
 .DS_Store
