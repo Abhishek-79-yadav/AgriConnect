@@ -43,29 +43,29 @@ export default function Users() {
         <EmptyState title="No users found" />
       ) : (
         <div className="rounded-lg border border-line bg-card overflow-x-auto">
-          <table className="w-full text-sm">
+          <table className="min-w-full text-sm">
             <thead className="border-b border-line bg-paper text-left text-xs uppercase tracking-wide text-ink/50">
               <tr>
-                <th className="px-4 py-3">User</th>
-                <th className="px-4 py-3">Email</th>
-                <th className="px-4 py-3">Role</th>
-                <th className="px-4 py-3 text-right">Actions</th>
+                <th className="whitespace-nowrap px-4 py-3">User</th>
+                <th className="whitespace-nowrap px-4 py-3">Email</th>
+                <th className="whitespace-nowrap px-4 py-3">Role</th>
+                <th className="whitespace-nowrap px-4 py-3 text-right">Actions</th>
               </tr>
             </thead>
             <tbody>
               {users.map((user) => (
                 <tr key={user.id} className="border-b border-line last:border-0">
-                  <td className="px-4 py-3">
+                  <td className="whitespace-nowrap px-4 py-3">
                     <div className="flex items-center gap-2">
                       <Avatar name={user.name} size={28} />
                       <span className="font-medium text-ink">{user.name}</span>
                     </div>
                   </td>
-                  <td className="px-4 py-3 text-ink/70">{user.email}</td>
-                  <td className="px-4 py-3">
+                  <td className="whitespace-nowrap px-4 py-3 text-ink/70">{user.email}</td>
+                  <td className="whitespace-nowrap px-4 py-3">
                     <Badge text={user.role} tone={ROLE_TONE[user.role] || "neutral"} />
                   </td>
-                  <td className="px-4 py-3 text-right">
+                  <td className="whitespace-nowrap px-4 py-3 text-right">
                     <button onClick={() => setToDelete(user)} className="rounded p-1.5 text-rust hover:bg-rust-light">
                       <Trash2 className="h-4 w-4" />
                     </button>

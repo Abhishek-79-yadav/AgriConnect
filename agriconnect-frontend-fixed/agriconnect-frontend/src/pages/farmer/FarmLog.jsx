@@ -136,19 +136,19 @@ export default function FarmLog() {
           </div>
 
           <div className="rounded-lg border border-line bg-card overflow-x-auto">
-            <table className="w-full text-sm">
+            <table className="min-w-full text-sm">
               <thead className="border-b border-line bg-paper text-left text-xs uppercase tracking-wide text-ink/50">
                 <tr>
-                  <th className="px-4 py-3">Crop</th>
-                  <th className="px-4 py-3">Season</th>
-                  <th className="px-4 py-3">Date</th>
-                  <th className="px-4 py-3">Quantity</th>
-                  <th className="px-4 py-3">Cost</th>
-                  <th className="px-4 py-3">Sell</th>
-                  <th className="px-4 py-3">Profit</th>
-                  <th className="px-4 py-3">Fertilizer</th>
-                  <th className="px-4 py-3">Pesticide</th>
-                  <th className="px-4 py-3 text-right">Actions</th>
+                  <th className="whitespace-nowrap px-4 py-3">Crop</th>
+                  <th className="whitespace-nowrap px-4 py-3">Season</th>
+                  <th className="whitespace-nowrap px-4 py-3">Date</th>
+                  <th className="whitespace-nowrap px-4 py-3">Quantity</th>
+                  <th className="whitespace-nowrap px-4 py-3">Cost</th>
+                  <th className="whitespace-nowrap px-4 py-3">Sell</th>
+                  <th className="whitespace-nowrap px-4 py-3">Profit</th>
+                  <th className="whitespace-nowrap px-4 py-3">Fertilizer</th>
+                  <th className="whitespace-nowrap px-4 py-3">Pesticide</th>
+                  <th className="whitespace-nowrap px-4 py-3 text-right">Actions</th>
                 </tr>
               </thead>
               <tbody>
@@ -157,22 +157,22 @@ export default function FarmLog() {
                   const sell = (r.sellingPricePerUnit || 0) * (r.quantity || 0);
                   return (
                     <tr key={r.id} className="border-b border-line last:border-0">
-                      <td className="px-4 py-3 font-medium text-ink">{r.cropName}</td>
-                      <td className="px-4 py-3 text-ink/70">{r.season}</td>
-                      <td className="px-4 py-3 text-ink/70">{r.date}</td>
-                      <td className="px-4 py-3 text-ink/70">{r.quantity}</td>
-                      <td className="px-4 py-3 text-rust">₹{cost.toFixed(2)}</td>
-                      <td className="px-4 py-3 text-slate-dark">₹{sell.toFixed(2)}</td>
-                      <td className={`px-4 py-3 font-medium ${r.profit >= 0 ? "text-field-dark" : "text-rust"}`}>
+                      <td className="whitespace-nowrap px-4 py-3 font-medium text-ink">{r.cropName}</td>
+                      <td className="whitespace-nowrap px-4 py-3 text-ink/70">{r.season}</td>
+                      <td className="whitespace-nowrap px-4 py-3 text-ink/70">{r.date}</td>
+                      <td className="whitespace-nowrap px-4 py-3 text-ink/70">{r.quantity}</td>
+                      <td className="whitespace-nowrap px-4 py-3 text-rust">₹{cost.toFixed(2)}</td>
+                      <td className="whitespace-nowrap px-4 py-3 text-slate-dark">₹{sell.toFixed(2)}</td>
+                      <td className={`whitespace-nowrap px-4 py-3 font-medium ${r.profit >= 0 ? "text-field-dark" : "text-rust"}`}>
                         ₹{r.profit?.toFixed(2)}
                       </td>
-                      <td className="px-4 py-3 text-ink/70">
+                      <td className="whitespace-nowrap px-4 py-3 text-ink/70">
                         {r.fertilizerUsed ? `${r.fertilizerUsed}${r.fertilizerQuantityKg ? ` (${r.fertilizerQuantityKg}kg)` : ""}` : "—"}
                       </td>
-                      <td className="px-4 py-3 text-ink/70">
+                      <td className="whitespace-nowrap px-4 py-3 text-ink/70">
                         {r.pesticideUsed ? `${r.pesticideUsed}${r.pesticideQuantityL ? ` (${r.pesticideQuantityL}L)` : ""}` : "—"}
                       </td>
-                      <td className="px-4 py-3 text-right">
+                      <td className="whitespace-nowrap px-4 py-3 text-right">
                         <button onClick={() => setToDelete(r)} className="rounded p-1.5 text-rust hover:bg-rust-light">
                           <Trash2 className="h-4 w-4" />
                         </button>

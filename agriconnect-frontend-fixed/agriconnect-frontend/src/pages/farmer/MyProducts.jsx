@@ -56,26 +56,26 @@ export default function MyProducts() {
         />
       ) : (
         <div className="rounded-lg border border-line bg-card overflow-x-auto">
-          <table className="w-full text-sm">
+          <table className="min-w-full text-sm">
             <thead className="border-b border-line bg-paper text-left text-xs uppercase tracking-wide text-ink/50">
               <tr>
-                <th className="px-4 py-3">Name</th>
-                <th className="px-4 py-3">Price</th>
-                <th className="px-4 py-3">Quantity</th>
-                <th className="px-4 py-3">Status</th>
-                <th className="px-4 py-3 text-right">Actions</th>
+                <th className="whitespace-nowrap px-4 py-3">Name</th>
+                <th className="whitespace-nowrap px-4 py-3">Price</th>
+                <th className="whitespace-nowrap px-4 py-3">Quantity</th>
+                <th className="whitespace-nowrap px-4 py-3">Status</th>
+                <th className="whitespace-nowrap px-4 py-3 text-right">Actions</th>
               </tr>
             </thead>
             <tbody>
               {products.map((product) => (
                 <tr key={product.id} className="border-b border-line last:border-0">
-                  <td className="px-4 py-3 font-medium text-ink">{product.productName || product.name}</td>
-                  <td className="px-4 py-3 text-ink/70">₹{product.price}</td>
-                  <td className="px-4 py-3 text-ink/70">{product.quantity ?? "-"} {product.unit?.toLowerCase()}</td>
-                  <td className="px-4 py-3">
+                  <td className="whitespace-nowrap px-4 py-3 font-medium text-ink">{product.productName || product.name}</td>
+                  <td className="whitespace-nowrap px-4 py-3 text-ink/70">₹{product.price}</td>
+                  <td className="whitespace-nowrap px-4 py-3 text-ink/70">{product.quantity ?? "-"} {product.unit?.toLowerCase()}</td>
+                  <td className="whitespace-nowrap px-4 py-3">
                     <Badge text={product.available === false ? "Unavailable" : "Available"} tone={product.available === false ? "rust" : "field"} />
                   </td>
-                  <td className="px-4 py-3">
+                  <td className="whitespace-nowrap px-4 py-3">
                     <div className="flex justify-end gap-2">
                       <Link to={`/farmer/products/${product.id}/edit`} className="rounded p-1.5 text-ink/50 hover:bg-paper hover:text-ink">
                         <Pencil className="h-4 w-4" />
