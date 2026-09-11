@@ -33,11 +33,13 @@ public class JwtAuthFilter extends OncePerRequestFilter {
 
         String path = request.getServletPath();
 
-        return path.startsWith("/swagger-ui")
+        return "OPTIONS".equalsIgnoreCase(request.getMethod())
+                || path.startsWith("/swagger-ui")
                 || path.startsWith("/v3/api-docs")
                 || path.startsWith("/actuator")
                 || path.startsWith("/favicon.ico");
     }
+
 
     // Rate limiting keys on IP, so this must be the real client IP. Behind
     // any reverse proxy/load balancer (nginx, ALB, Cloudflare, Render,
