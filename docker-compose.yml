@@ -1,0 +1,92 @@
+services:
+  mysql:
+    image: mysql:8.0
+    container_name: agriconnect-mysql
+    restart: unless-stopped
+    environment:
+      MYSQL_DATABASE: ${DB_NAME:-agriconnect}
+      MYSQL_USER: ${DB_USERNAME:-agriconnect}
+      MYSQL_PASSWORD: ${DB_PASSWORD:-agriconnect}
+      MYSQL_ROOT_PASSWORD: ${DB_ROOT_PASSWORD:-rootpass}
+    ports:
+      - "3306:3306"
+    volumes:
+      - mysql-data:/var/lib/mysql
+    healthcheck:
+      test: ["CMD", "mysqladmin", "ping", "-h", "localhost", "-uroot", "-p${DB_ROOT_PASSWORD:-rootpass}"]
+      interval: 5s
+      timeout: 5s
+      retries: 20
+
+  redis:
+    image: redis:7-alpine
+    container_name: agriconnect-redis
+    restart: unless-stopped
+    ports:
+      - "6379:6379"
+    healthcheck:
+      test: [ "CMD", "redis-cli", "ping" ]
+      interval: 5s
+      timeout: 3s
+      retries: 20
+
+  backend:
+    build:
+      context: ./AgriConnect
+    container_name: agriconnect-backend
+    restart: unless-stopped
+    depends_on:
+      mysql:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
+    environment:
+      # Service name "mysql" resolves via Docker's internal DNS — this is
+      # the #1 thing people get wrong: it's NOT localhost from inside a
+      # container, each service only sees the others by their service name.
+      DB_URL: jdbc:mysql://mysql:3306/${DB_NAME:-agriconnect}?createDatabaseIfNotExist=true
+      DB_USERNAME: ${DB_USERNAME:-agriconnect}
+      DB_PASSWORD: ${DB_PASSWORD:-agriconnect}
+      JWT_SECRET: ${JWT_SECRET:-dev-only-secret-change-me-please-32-chars-min}
+      JWT_ACCESS_EXPIRATION: ${JWT_ACCESS_EXPIRATION:-900000}
+      JWT_REFRESH_EXPIRATION: ${JWT_REFRESH_EXPIRATION:-604800000}
+      REDIS_HOST: redis
+      REDIS_PORT: 6379
+      RAZORPAY_KEY: ${RAZORPAY_KEY:-}
+      RAZORPAY_SECRET: ${RAZORPAY_SECRET:-}
+      WEATHER_API_KEY: ${WEATHER_API_KEY:-}
+      CLOUDINARY_CLOUD_NAME: ${CLOUDINARY_CLOUD_NAME:-}
+      CLOUDINARY_API_KEY: ${CLOUDINARY_API_KEY:-}
+      CLOUDINARY_API_SECRET: ${CLOUDINARY_API_SECRET:-}
+      MAIL_USERNAME: ${MAIL_USERNAME:-}
+      MAIL_PASSWORD: ${MAIL_PASSWORD:-}
+      CORS_ALLOWED_ORIGINS: http://localhost:5173,http://localhost:3000,http://localhost:8081
+      # Kafka isn't actually wired to any listener/producer in this codebase
+      # yet, and spring.kafka.admin.fail-fast=false — so leaving this
+      # unreachable is fine, it just logs a warning instead of crashing.
+      KAFKA_BOOTSTRAP_SERVERS: ${KAFKA_BOOTSTRAP_SERVERS:-kafka:9092}
+    ports:
+      - "8080:8080"
+
+  frontend:
+    build:
+      context: ./agriconnect-frontend
+      args:
+        # Vite bakes these into the built JS at image-build time, not at
+        # container-start time — changing them later means rebuilding this
+        # image, `docker compose up` alone won't pick up a changed .env.
+        VITE_API_URL: ${VITE_API_URL:-http://localhost:8080/api}
+        VITE_SOCKET_URL: ${VITE_SOCKET_URL:-http://localhost:8080}
+        VITE_APP_NAME: ${VITE_APP_NAME:-AgriConnect}
+        VITE_CLOUDINARY_NAME: ${CLOUDINARY_CLOUD_NAME:-}
+        VITE_CLOUDINARY_PRESET: ${VITE_CLOUDINARY_PRESET:-}
+        VITE_RAZORPAY_KEY: ${RAZORPAY_KEY:-}
+    container_name: agriconnect-frontend
+    restart: unless-stopped
+    depends_on:
+      - backend
+    ports:
+      - "8081:80"
+
+volumes:
+  mysql-data:

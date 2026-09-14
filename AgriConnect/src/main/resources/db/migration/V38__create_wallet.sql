@@ -1,0 +1,7 @@
+CREATE TABLE wallet (
+    id BIGINT AUTO_INCREMENT PRIMARY KEY,
+    user_id BIGINT NOT NULL UNIQUE,
+    balance DOUBLE NOT NULL DEFAULT 0,
+    updated_at TIMESTAMP NOT NULL,
+    CONSTRAINT fk_wallet_user FOREIGN KEY (user_id) REFERENCES users(id)
+);

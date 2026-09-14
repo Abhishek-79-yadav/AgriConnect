@@ -1,0 +1,32 @@
+@import "tailwindcss";
+
+@theme {
+  /* Core neutrals */
+  --color-ink: #1C2B2A;
+  --color-paper: #F3F7F6;
+  --color-card: #FFFFFF;
+  --color-line: #D6E2E0;
+
+  /* Primary — teal, official/institutional tone */
+  --color-gold: #0D7A6E;
+  --color-gold-dark: #0A5C53;
+  --color-gold-light: #E1F2EF;
+
+  /* Farmer accent — green */
+  --color-field: #1F7A3D;
+  --color-field-dark: #16592C;
+  --color-field-light: #E3F5E8;
+
+  /* Buyer accent — navy blue */
+  --color-slate: #1D4E89;
+  --color-slate-dark: #163C6B;
+  --color-slate-light: #E4ECF7;
+
+  /* Error/danger */
+  --color-rust: #B3261E;
+  --color-rust-dark: #8C1D17;
+  --color-rust-light: #FBE9E7;
+
+  --font-display: "Inter", "Noto Sans", system-ui, sans-serif;
+  --font-body: "Inter", "Noto Sans", system-ui, sans-serif;
+}
