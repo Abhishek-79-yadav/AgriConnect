@@ -1,34 +1,28 @@
 import { useEffect, useState } from "react";
-import { Link } from "react-router-dom";
 import toast from "react-hot-toast";
 import { Plus, Trash2 } from "lucide-react";
 
 import PageHeader from "../../components/common/PageHeader";
+import RequireSubscription from "../../components/common/RequireSubscription";
 import Button from "../../components/ui/Button";
 import Input from "../../components/ui/Input";
 import { getMyAgriInputsApi, createAgriInputApi, deleteAgriInputApi } from "../../api/agriInputApi";
 
 const EMPTY = { name: "", description: "", category: "", price: "", stock: "", unit: "", imageUrl: "" };
 
-export default function AgriInputs() {
+function AgriInputsContent() {
   const [items, setItems] = useState([]);
   const [loading, setLoading] = useState(true);
   const [form, setForm] = useState(EMPTY);
   const [showForm, setShowForm] = useState(false);
   const [submitting, setSubmitting] = useState(false);
-  const [needsPlan, setNeedsPlan] = useState(false);
 
   const load = async () => {
     setLoading(true);
     try {
       setItems(await getMyAgriInputsApi());
-      setNeedsPlan(false);
-    } catch (err) {
-      if (err.response?.status === 400 || err.response?.status === 403) {
-        setNeedsPlan(true);
-      } else {
-        toast.error("Could not load your listings");
-      }
+    } catch {
+      toast.error("Could not load your listings");
     } finally {
       setLoading(false);
     }
@@ -66,24 +60,8 @@ export default function AgriInputs() {
     }
   };
 
-  if (needsPlan) {
-    return (
-      <div>
-        <PageHeader title="My agri-input listings" />
-        <div className="rounded-lg border border-line bg-card p-6 text-center">
-          <p className="text-sm text-ink/70">You need an active plan to list products on the marketplace.</p>
-          <Link to="/brand/plans">
-            <Button className="mt-4">View plans</Button>
-          </Link>
-        </div>
-      </div>
-    );
-  }
-
   return (
-    <div>
-      <PageHeader title="My agri-input listings" subtitle="Fertilizers and pesticides you're selling on AgriConnect." />
-
+    <>
       <Button onClick={() => setShowForm((v) => !v)} className="mb-4">
         <Plus className="h-4 w-4" /> {showForm ? "Cancel" : "Add listing"}
       </Button>
@@ -128,6 +106,21 @@ export default function AgriInputs() {
           ))}
         </div>
       )}
+    </>
+  );
+}
+
+export default function AgriInputs() {
+  return (
+    <div>
+      <PageHeader title="My agri-input listings" subtitle="Fertilizers and pesticides you're selling on AgriConnect." />
+      <RequireSubscription
+        plansPath="/brand/plans"
+        title="Subscribe to start listing products"
+        description="An active plan is needed to list fertilizers and pesticides on the marketplace."
+      >
+        <AgriInputsContent />
+      </RequireSubscription>
     </div>
   );
 }
